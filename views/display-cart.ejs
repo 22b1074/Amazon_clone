@@ -1,0 +1,56 @@
+<!--Roll Number : 22B1074-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart</title>
+</head>
+<body>
+  <h2>Your Cart</h2>
+
+  <!-- Check if user is authenticated -->
+  <% if (session.userId) { %>
+    
+    <% if (cartItems.length > 0) { %>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Stock Status</th>
+            <th>Total Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% cartItems.forEach(item => { %>
+            <tr>
+              <td><%= item.name %></td>
+              <td><%= item.quantity %></td>
+              <td>$<%= typeof item.price === 'number' ? item.price.toFixed(2) : parseFloat(item.price).toFixed(2) %></td>
+              <td><%= item.stockStatus %></td>
+              <td><%= item.totalPrice.toFixed(2) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      
+      <p><strong>Total Price: $<%= totalPrice.toFixed(2) %></strong></p>
+
+      <!-- Place Order Button -->
+      <form action="/place-order" method="POST">
+        <button type="submit">Place Order</button>
+      </form>
+
+    <% } else { %>
+      <p>Your cart is empty.</p>
+    <% } %>
+
+  <% } else { %>
+    <p>You must be logged in to view your cart. <a href="/login">Login</a></p>
+  <% } %>
+
+  <p><a href="/dashboard">Back to Dashboard</a></p>
+</body>
+</html>

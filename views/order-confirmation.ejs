@@ -1,0 +1,37 @@
+<!--Roll Number : 22B1074-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+</head>
+<body>
+    <h1>Order Confirmation</h1>
+    <p>Order ID: <%= order.order_id %></p>
+    <p>Order Date: <%= order.order_date %></p>
+    <p><strong>Total Amount: $<%= parseFloat(order.total_amount).toFixed(2) %></strong></p>
+    
+    <h2>Order Items:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orderItems.forEach(item => { %>
+                <tr>
+                    <td><%= item.name %></td>
+                    <td><%= item.quantity %></td>
+                    <td>$<%= typeof item.price === 'number' ? item.price.toFixed(2) : parseFloat(item.price).toFixed(2) %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!--Roll Number : 22B1074-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product List</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h2>Product List</h2>
+  
+  <!-- Check if there are any products -->
+  <% if (products && products.length > 0) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Stock Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop through the products array and display each product in a row -->
+        <% products.forEach(product => { %>
+          <tr>
+            <td><%= product.product_id %></td>
+            <td><%= product.name %></td>
+            <!-- Ensure that price is a valid number and format it to 2 decimal places -->
+            <td>$<%= typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price).toFixed(2) %></td>
+            <td><%= product.stock_quantity %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No products available.</p>
+  <% } %>
+
+  <p><a href="/dashboard">Back to Dashboard</a></p>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!--Roll Number : 22B1074-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add to Cart</title>
+</head>
+<body>
+  <h2>Add Product to Cart</h2>
+
+  <!-- Check if user is authenticated -->
+  <% if (session.userId) { %>
+    <form action="/add-to-cart" method="POST">
+      <div>
+        <label for="product_id">Product ID:</label>
+        <input type="number" name="product_id" id="product_id" required>
+      </div>
+
+      <div>
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" id="quantity" required>
+      </div>
+
+      <div>
+        <button type="submit">Add to Cart</button>
+      </div>
+    </form>
+  <% } else { %>
+    <p>You must be logged in to add products to the cart. <a href="/login">Login</a></p>
+  <% } %>
+
+  <p><a href="/dashboard">Back to Dashboard</a></p>
+</body>
+</html>
