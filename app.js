@@ -10,10 +10,10 @@ const port = 3000;
 
 // TODO: Update PostgreSQL connection credentials before running the server
 const pool = new Pool({
-  user: 'test',
-  host: 'localhost',
-  database: 'ecommerce',
-  password: 'test',
+  user: 'preethi',
+  host: 'dpg-d0pfl7emcj7s73e37bv0-a',
+  database: 'amazon_1pnh',
+  password: 'DUHIwTbNSC3LfZXF5xiJOjQIiaY5fIx5',
   port: 5432,
 });
 
