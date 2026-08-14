@@ -1,30 +1,47 @@
-<!--Roll Number : 22B1074-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Remove Product from Cart</title>
+  <%- include('partials/head', { title: 'Remove from Cart' }) %>
 </head>
 <body>
-  <h2>Remove Product from Cart</h2>
+  <%- include('partials/header') %>
 
-  <!-- Check if user is authenticated -->
-  <% if (session.userId) { %>
-    <form action="/remove-from-cart" method="POST">
-      <div>
-        <label for="product_id">Product ID:</label>
-        <input type="number" name="product_id" id="product_id" required>
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap-wide">
+        <nav class="crumbs reveal" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span>
+          <a href="/dashboard">Account</a><span aria-hidden="true">/</span><span>Remove from Cart</span>
+        </nav>
+        <span class="eyebrow reveal">Edit Cart</span>
+        <h1 class="h1 reveal" data-delay="1">Remove a piece</h1>
+        <p class="lede reveal" data-delay="2">
+          Enter the reference number of the piece you would like to take out of your cart.
+        </p>
       </div>
+    </section>
 
-      <div>
-        <button type="submit">Remove from Cart</button>
+    <section class="section section--tight">
+      <div class="wrap-slim">
+        <form class="summary reveal" action="/remove-from-cart" method="POST">
+          <h3>Remove by reference</h3>
+
+          <label class="field">
+            <span class="field__label">Reference number</span>
+            <input class="input" type="number" name="product_id" min="1" placeholder="e.g. 5" required>
+          </label>
+
+          <button class="btn btn--dark btn--block btn--lg" type="submit">Remove from Cart</button>
+          <a class="btn btn--ghost btn--block" href="/display-cart" style="margin-top:0.75rem">View Cart</a>
+
+          <p class="tiny muted" style="margin-top:1.25rem">
+            You can also remove a piece directly from the cart page. Each line has a remove control.
+          </p>
+        </form>
       </div>
-    </form>
-  <% } else { %>
-    <p>You must be logged in to remove products from the cart. <a href="/login">Login</a></p>
-  <% } %>
+    </section>
+  </main>
 
-  <p><a href="/dashboard">Back to Dashboard</a></p>
+  <%- include('partials/footer') %>
 </body>
 </html>

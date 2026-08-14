@@ -1,35 +1,73 @@
-<!--Roll Number : 22B1074-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add to Cart</title>
+  <%- include('partials/head', { title: 'Add to Cart' }) %>
 </head>
 <body>
-  <h2>Add Product to Cart</h2>
+  <%- include('partials/header') %>
 
-  <!-- Check if user is authenticated -->
-  <% if (session.userId) { %>
-    <form action="/add-to-cart" method="POST">
-      <div>
-        <label for="product_id">Product ID:</label>
-        <input type="number" name="product_id" id="product_id" required>
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap-wide">
+        <nav class="crumbs reveal" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span>
+          <a href="/dashboard">Account</a><span aria-hidden="true">/</span><span>Add to Cart</span>
+        </nav>
+        <span class="eyebrow reveal">Quick Order</span>
+        <h1 class="h1 reveal" data-delay="1">Add by reference</h1>
+        <p class="lede reveal" data-delay="2">
+          Every piece carries a reference number. Enter it here to add straight to your cart,
+          or pick from the list below.
+        </p>
       </div>
+    </section>
 
-      <div>
-        <label for="quantity">Quantity:</label>
-        <input type="number" name="quantity" id="quantity" required>
+    <section class="section section--tight">
+      <div class="wrap-wide" style="display:grid;grid-template-columns:minmax(0,340px) 1fr;gap:clamp(2rem,5vw,4.5rem);align-items:start">
+
+        <form class="summary reveal" action="/add-to-cart" method="POST" data-cart-form style="position:sticky;top:calc(var(--nav-h) + 1.5rem)">
+          <h3>Add a piece</h3>
+
+          <label class="field">
+            <span class="field__label">Reference number</span>
+            <input class="input" type="number" name="product_id" min="1" placeholder="e.g. 5" required>
+          </label>
+
+          <div class="field">
+            <span class="field__label">Quantity</span>
+            <div class="qty">
+              <button class="qty__btn" type="button" data-step="down" aria-label="Decrease quantity">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 6h8" stroke-linecap="round"/></svg>
+              </button>
+              <label class="visually-hidden" for="qty">Quantity</label>
+              <input class="qty__input" type="number" id="qty" name="quantity" value="1" min="1" required>
+              <button class="qty__btn" type="button" data-step="up" aria-label="Increase quantity">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 2v8M2 6h8" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <button class="btn btn--primary btn--block btn--lg" type="submit">Add to Cart</button>
+          <a class="btn btn--ghost btn--block" href="/display-cart" style="margin-top:0.75rem">View Cart</a>
+        </form>
+
+        <div>
+          <div class="toolbar">
+            <p class="toolbar__count">All <%= products.length %> pieces, with reference numbers</p>
+            <a class="link-underline" href="/shop">Shop with photography</a>
+          </div>
+
+          <div class="product-grid product-grid--4">
+            <% products.forEach(function (product, i) { %>
+              <%- include('partials/product-card', { product: product, delay: Math.min(i % 4 + 1, 4) }) %>
+            <% }) %>
+          </div>
+        </div>
+
       </div>
+    </section>
+  </main>
 
-      <div>
-        <button type="submit">Add to Cart</button>
-      </div>
-    </form>
-  <% } else { %>
-    <p>You must be logged in to add products to the cart. <a href="/login">Login</a></p>
-  <% } %>
-
-  <p><a href="/dashboard">Back to Dashboard</a></p>
+  <%- include('partials/footer') %>
 </body>
 </html>

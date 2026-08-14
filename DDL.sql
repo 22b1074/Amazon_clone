@@ -23,6 +23,17 @@ CREATE TABLE Orders (
     user_id INT NOT NULL,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total_amount DECIMAL(10,2) NOT NULL,
+    -- Delivery address, snapshotted at purchase time. Deliberately stored on
+    -- the order rather than looked up from the user, so editing a saved
+    -- address later never rewrites where a past order was actually shipped.
+    ship_name VARCHAR(120) NOT NULL,
+    ship_line1 VARCHAR(200) NOT NULL,
+    ship_line2 VARCHAR(200),
+    ship_city VARCHAR(120) NOT NULL,
+    ship_postcode VARCHAR(24) NOT NULL,
+    ship_phone VARCHAR(40),
+    ship_method VARCHAR(20) NOT NULL DEFAULT 'standard',
+    shipping_cost DECIMAL(10,2) NOT NULL DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 

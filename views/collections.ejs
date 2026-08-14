@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title: 'Collections' }) %>
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap-wide">
+        <nav class="crumbs reveal" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><span>Collections</span>
+        </nav>
+        <span class="eyebrow reveal">The Edits</span>
+        <h1 class="h1 reveal" data-delay="1">Collections</h1>
+        <p class="lede reveal" data-delay="2">
+          Four small edits, each built around a room or a routine rather than a category.
+          Nothing enters a collection until it earns its place.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap-wide" style="display:grid;gap:clamp(3rem,7vw,6rem)">
+        <% collectionList.forEach(function (c, i) { %>
+          <article class="editorial <%= i % 2 === 1 ? 'editorial--reverse' : '' %>">
+            <div class="editorial__media reveal">
+              <%- catalog.sceneArt(c.tone, i, 'portrait') %>
+            </div>
+            <div class="editorial__body reveal" data-delay="1">
+              <span class="eyebrow"><%= String(i + 1).padStart(2, '0') %> · <%= c.subtitle %></span>
+              <h2 class="h2" style="margin-bottom:1.25rem"><%= c.name %></h2>
+              <p class="lede"><%= c.blurb %></p>
+              <p class="muted small" style="margin-bottom:2rem">
+                <%= c.count %> <%= c.count === 1 ? 'piece' : 'pieces' %> ·
+                <%= c.categories.join(' · ') %>
+              </p>
+              <a class="btn btn--ghost" href="/collections/<%= c.slug %>">Explore <%= c.name %></a>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    </section>
+
+    <section class="section section--dark">
+      <div class="wrap-slim newsletter reveal">
+        <span class="eyebrow eyebrow--light">Not sure where to start?</span>
+        <h2 class="h2">Browse everything</h2>
+        <p class="lede">All <%= totalCount %> pieces in one place, filterable by category and price.</p>
+        <div style="margin-top:2.5rem"><a class="btn btn--light btn--lg" href="/shop">Shop all pieces</a></div>
+      </div>
+    </section>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

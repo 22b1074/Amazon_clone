@@ -1,0 +1,46 @@
+<%
+  // Generic status page. Expects: heading, body, tone ('success' | 'warn' | 'error'), actions [{href,label,primary}]
+  var iconClass = tone === 'error' ? 'notice__icon--error' : (tone === 'warn' ? 'notice__icon--warn' : '');
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title: heading }) %>
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <main id="main">
+    <div class="wrap notice">
+      <div class="notice__inner">
+        <div class="notice__icon <%= iconClass %>">
+          <% if (tone === 'success') { %>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M5 12.5l4.5 4.5L19 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          <% } else if (tone === 'warn') { %>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 4l9 16H3z" stroke-linejoin="round"/><path d="M12 10v4M12 17h.01" stroke-linecap="round"/>
+            </svg>
+          <% } else { %>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16h.01" stroke-linecap="round"/>
+            </svg>
+          <% } %>
+        </div>
+
+        <h1 class="h2"><%= heading %></h1>
+        <p class="lede"><%= body %></p>
+
+        <div class="notice__actions">
+          <% actions.forEach(function (a) { %>
+            <a class="btn <%= a.primary ? 'btn--primary' : 'btn--ghost' %>" href="<%= a.href %>"><%= a.label %></a>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

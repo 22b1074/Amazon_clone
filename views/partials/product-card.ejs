@@ -1,0 +1,53 @@
+<%
+  // Expects: product (decorated). Optional: delay (reveal stagger), showQuickAdd.
+  var quickAdd = typeof showQuickAdd === 'undefined' ? true : showQuickAdd;
+  var stagger  = typeof delay === 'undefined' ? 0 : delay;
+%>
+<article class="product-card reveal" <% if (stagger) { %>data-delay="<%= stagger %>"<% } %> data-product-id="<%= product.id %>">
+  <div class="product-card__media">
+    <a href="<%= product.href %>" aria-label="<%= product.title %>">
+      <%- catalog.productArt(product, { ratio: 'portrait' }) %>
+    </a>
+
+    <div class="product-card__badges">
+      <% if (product.isNew) { %><span class="badge badge--new">New</span><% } %>
+      <% if (!product.inStock) { %><span class="badge badge--out">Sold out</span>
+      <% } else if (product.lowStock) { %><span class="badge badge--low">Only <%= product.stock %> left</span><% } %>
+    </div>
+
+    <button class="wish" type="button" data-wish="<%= product.id %>" aria-pressed="false">
+      <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4">
+        <path d="M10 16.5S3 12.6 3 7.9A3.9 3.9 0 0 1 10 5.6a3.9 3.9 0 0 1 7 2.3c0 4.7-7 8.6-7 8.6z" stroke-linejoin="round"/>
+      </svg>
+      <span class="visually-hidden">Add to wishlist</span>
+    </button>
+
+    <% if (quickAdd && product.inStock) { %>
+      <div class="quick-add">
+        <% if (session && session.userId) { %>
+          <form action="/add-to-cart" method="POST" data-cart-form>
+            <input type="hidden" name="product_id" value="<%= product.id %>">
+            <input type="hidden" name="quantity" value="1">
+            <button class="btn btn--sm" type="submit">Quick Add</button>
+          </form>
+        <% } else { %>
+          <a class="btn btn--sm" href="/login">Quick Add</a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="product-card__body">
+    <span class="product-card__cat"><%= product.category %></span>
+    <h3 class="product-card__name"><a href="<%= product.href %>"><%= product.title %></a></h3>
+    <div class="product-card__row">
+      <span class="price">$<%= product.priceLabel %></span>
+      <span class="rating">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+          <path d="M6 .8l1.6 3.3 3.6.5-2.6 2.5.6 3.6L6 9l-3.2 1.7.6-3.6L.8 4.6l3.6-.5z"/>
+        </svg>
+        <%= product.rating.toFixed(1) %>
+      </span>
+    </div>
+  </div>
+</article>

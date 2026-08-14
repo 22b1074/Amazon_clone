@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title: 'Our Story' }) %>
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap-wide">
+        <nav class="crumbs reveal" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><span>About</span>
+        </nav>
+        <span class="eyebrow reveal">Since <%= catalog.brand.since %></span>
+        <h1 class="h1 reveal" data-delay="1">We make fewer things,<br>and we make them <em class="serif-italic">properly</em>.</h1>
+        <p class="lede reveal" data-delay="2">
+          <%= catalog.brand.name %> began in a <%= catalog.brand.city %> workshop with one stubborn idea:
+          that most of what we own could last considerably longer than it does.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="craft">
+      <div class="wrap-wide">
+        <div class="editorial">
+          <div class="editorial__media reveal"><%- catalog.sceneArt('clay', 0, 'portrait') %></div>
+          <div class="editorial__body reveal" data-delay="1">
+            <span class="eyebrow">Craftsmanship</span>
+            <h2 class="h2" style="margin-bottom:1.5rem">The slowest part is the point</h2>
+            <p class="lede">
+              A dining table takes eleven weeks to leave our workshop. Most of that is waiting:
+              for timber to settle, for oil to cure, for a joint to be tested and, often, remade.
+            </p>
+            <p class="muted">
+              We could compress it. Every supplier we have ever spoken to has offered to. But the
+              parts of the process you cannot see are precisely the parts that decide whether a
+              piece is still standing in twenty years.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--cream" id="materials">
+      <div class="wrap-wide">
+        <div class="editorial editorial--reverse">
+          <div class="editorial__media reveal"><%- catalog.sceneArt('sage', 1, 'portrait') %></div>
+          <div class="editorial__body reveal" data-delay="1">
+            <span class="eyebrow">Materials</span>
+            <h2 class="h2" style="margin-bottom:1.5rem">Honest, and only honest</h2>
+            <p class="lede">
+              Solid timber rather than veneer. Vegetable-tanned leather rather than coated.
+              Undyed cloth wherever colour is not the point.
+            </p>
+            <p class="muted">
+              These choices cost more and they photograph less dramatically. They also age
+              instead of degrading, so a scratch becomes patina rather than damage.
+            </p>
+            <div class="pillars">
+              <div class="pillar">
+                <span class="pillar__n">92%</span>
+                <h4>Natural fibres</h4>
+                <p>Across the current range, by weight.</p>
+              </div>
+              <div class="pillar">
+                <span class="pillar__n">14</span>
+                <h4>Workshops</h4>
+                <p>All visited, all named on request.</p>
+              </div>
+              <div class="pillar">
+                <span class="pillar__n">0</span>
+                <h4>Single-use plastic</h4>
+                <p>In packaging, since 2019.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap-wide">
+        <article class="feature reveal">
+          <div class="feature__media"><%- catalog.sceneArt('stone', 1, 'wide') %></div>
+          <div class="feature__body">
+            <span class="eyebrow eyebrow--light">The Journal</span>
+            <h2 class="h2">Notes from the workshop</h2>
+            <p>
+              Every few weeks we write up what we are working on: a joint that failed, a mill that
+              closed, a material we abandoned after eight months of testing. It is less polished
+              than a catalogue and considerably more useful.
+            </p>
+            <a class="btn btn--light" href="/shop">Browse the collection</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section--beige" id="care">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div class="section-head__text">
+            <span class="eyebrow">Practical</span>
+            <h2 class="h2">Shipping, returns &amp; care</h2>
+          </div>
+        </div>
+
+        <div class="accordion reveal">
+          <div class="accordion__item">
+            <button class="accordion__btn" type="button" aria-expanded="true" aria-controls="ab-ship">
+              Shipping <span class="accordion__icon" aria-hidden="true"></span>
+            </button>
+            <div class="accordion__panel is-open" id="ab-ship">
+              <div>
+                <p>
+                  Orders are dispatched within two working days. Standard delivery takes 3 to 5 days and is
+                  complimentary on orders over $150. Furniture is delivered by appointment, unpacked in
+                  the room of your choosing, and the packaging taken away.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion__item">
+            <button class="accordion__btn" type="button" aria-expanded="false" aria-controls="ab-returns">
+              Returns <span class="accordion__icon" aria-hidden="true"></span>
+            </button>
+            <div class="accordion__panel" id="ab-returns">
+              <div>
+                <p>
+                  Thirty days, unused, in the original packaging. Full refund, return postage covered.
+                  If something arrives damaged, tell us and we will replace it before arranging the return.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion__item">
+            <button class="accordion__btn" type="button" aria-expanded="false" aria-controls="ab-care">
+              Product care <span class="accordion__icon" aria-hidden="true"></span>
+            </button>
+            <div class="accordion__panel" id="ab-care">
+              <div>
+                <p>
+                  Care instructions ship with every piece and are listed on each product page. In short:
+                  oil timber once a year, condition leather at the end of each season, wash cloth cold and
+                  dry it flat. Anything that wears out can be repaired. Write to us with the reference number.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion__item">
+            <button class="accordion__btn" type="button" aria-expanded="false" aria-controls="ab-guarantee">
+              Guarantee <span class="accordion__icon" aria-hidden="true"></span>
+            </button>
+            <div class="accordion__panel" id="ab-guarantee">
+              <div>
+                <p>
+                  Two years against manufacturing fault, and an open offer to repair anything we made
+                  for as long as we can source the parts. That has held since <%= catalog.brand.since %>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

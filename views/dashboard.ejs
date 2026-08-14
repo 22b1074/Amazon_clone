@@ -1,22 +1,119 @@
-<!--Roll Number : 22B1074-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Dashboard</title>
+  <%- include('partials/head', { title: 'Your Account' }) %>
 </head>
 <body>
-  <h2>Welcome to Your Dashboard!</h2>
-  <p>Navigate through the following options:</p>
+  <%- include('partials/header') %>
 
-  <ul>
-    <li><a href="/list-products">List Products</a></li>
-    <li><a href="/add-to-cart">Add to Cart</a></li>
-    <li><a href="/remove-from-cart">Remove from Cart</a></li>
-    <li><a href="/display-cart">Display Cart</a></li>
-  </ul>
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap-wide">
+        <nav class="crumbs reveal" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><span>Account</span>
+        </nav>
+        <span class="eyebrow reveal">Your Account</span>
+        <h1 class="h1 reveal" data-delay="1">Welcome back</h1>
+        <p class="lede reveal" data-delay="2">Everything you have saved, ordered, and set aside.</p>
+      </div>
+    </section>
 
-  <p><a href="/logout">Logout</a></p>
+    <section class="section section--tight">
+      <div class="wrap-wide account">
+        <nav class="account__nav" aria-label="Account">
+          <a class="is-active" href="/dashboard">Overview</a>
+          <a href="/display-cart">Your Cart<%= cartCount > 0 ? ' (' + cartCount + ')' : '' %></a>
+          <a href="/wishlist">Wishlist</a>
+          <a href="/order-confirmation">Latest Order</a>
+          <a href="/shop">Continue Shopping</a>
+          <a href="/logout">Sign Out</a>
+        </nav>
+
+        <div>
+          <div class="tiles">
+            <a class="tile reveal" href="/shop">
+              <div class="tile__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+                  <rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 13h8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3>Browse the collection</h3>
+              <p>All <%= totalCount %> pieces, filterable by category, price, and rating.</p>
+            </a>
+
+            <a class="tile reveal" data-delay="1" href="/display-cart">
+              <div class="tile__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+                  <path d="M5 7h14l-1.3 10.7a2 2 0 0 1-2 1.8H8.3a2 2 0 0 1-2-1.8z" stroke-linejoin="round"/>
+                  <path d="M9 7a3 3 0 0 1 6 0" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3>Your cart</h3>
+              <p><%= cartCount > 0 ? cartCount + (cartCount === 1 ? ' item' : ' items') + ' waiting.' : 'Nothing in your cart yet.' %></p>
+            </a>
+
+            <a class="tile reveal" data-delay="2" href="/wishlist">
+              <div class="tile__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+                  <path d="M12 20S3 15 3 9.4A4.9 4.9 0 0 1 12 6.6a4.9 4.9 0 0 1 9 2.8C21 15 12 20 12 20z" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h3>Wishlist</h3>
+              <p>Pieces you have set aside for later.</p>
+            </a>
+
+            <a class="tile reveal" data-delay="3" href="/order-confirmation">
+              <div class="tile__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+                  <path d="M6 3h9l4 4v14H6z" stroke-linejoin="round"/><path d="M9 12h6M9 16h4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3>Latest order</h3>
+              <p>Track what you last placed and what it contained.</p>
+            </a>
+
+            <a class="tile reveal" href="/add-to-cart">
+              <div class="tile__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+                  <circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3>Add by reference</h3>
+              <p>Know the reference number? Add it straight to your cart.</p>
+            </a>
+
+            <a class="tile reveal" data-delay="1" href="/remove-from-cart">
+              <div class="tile__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+                  <circle cx="12" cy="12" r="9"/><path d="M8 12h8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3>Remove by reference</h3>
+              <p>Take a piece out of your cart by its reference number.</p>
+            </a>
+          </div>
+
+          <% if (suggestions && suggestions.length) { %>
+            <div style="margin-top:clamp(3rem,6vw,5rem)">
+              <div class="section-head reveal">
+                <div class="section-head__text">
+                  <span class="eyebrow">Chosen for you</span>
+                  <h2 class="h2">You may like</h2>
+                </div>
+                <a class="link-underline" href="/shop">Shop all</a>
+              </div>
+              <div class="product-grid product-grid--4">
+                <% suggestions.forEach(function (product, i) { %>
+                  <%- include('partials/product-card', { product: product, delay: Math.min(i + 1, 4) }) %>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <%- include('partials/footer') %>
 </body>
 </html>

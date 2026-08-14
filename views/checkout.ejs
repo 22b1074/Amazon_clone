@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title: 'Checkout' }) %>
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap-wide">
+        <nav class="crumbs reveal" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span>
+          <a href="/display-cart">Cart</a><span aria-hidden="true">/</span><span>Checkout</span>
+        </nav>
+        <span class="eyebrow reveal">Step 2 of 3</span>
+        <h1 class="h1 reveal" data-delay="1">Where should it go?</h1>
+        <p class="lede reveal" data-delay="2">
+          Larger pieces are delivered by appointment, so a phone number helps us find a time that suits you.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="wrap-wide cart">
+
+        <form action="/place-order" method="POST" novalidate>
+
+          <% if (errors.length) { %>
+            <div class="form-error reveal" role="alert">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16h.01" stroke-linecap="round"/>
+              </svg>
+              <div>
+                <strong><%= errors.length === 1 ? 'One detail needs fixing' : errors.length + ' details need fixing' %></strong>
+                <ul>
+                  <% errors.forEach(function (e) { %><li><%= e.message %></li><% }) %>
+                </ul>
+              </div>
+            </div>
+          <% } %>
+
+          <fieldset class="fieldset reveal">
+            <legend class="fieldset__legend">Delivery address</legend>
+
+            <label class="field">
+              <span class="field__label">Full name</span>
+              <input class="input <%= fieldErrors.ship_name ? 'input--error' : '' %>" type="text" name="ship_name"
+                     value="<%= values.ship_name %>" autocomplete="name" required>
+              <% if (fieldErrors.ship_name) { %><span class="field__error"><%= fieldErrors.ship_name %></span><% } %>
+            </label>
+
+            <label class="field">
+              <span class="field__label">Address</span>
+              <input class="input <%= fieldErrors.ship_line1 ? 'input--error' : '' %>" type="text" name="ship_line1"
+                     value="<%= values.ship_line1 %>" autocomplete="address-line1"
+                     placeholder="House or flat number and street" required>
+              <% if (fieldErrors.ship_line1) { %><span class="field__error"><%= fieldErrors.ship_line1 %></span><% } %>
+            </label>
+
+            <label class="field">
+              <span class="field__label">Address line 2 <span class="field__optional">Optional</span></span>
+              <input class="input" type="text" name="ship_line2" value="<%= values.ship_line2 %>"
+                     autocomplete="address-line2" placeholder="Building, floor, or landmark">
+            </label>
+
+            <div class="field-row">
+              <label class="field">
+                <span class="field__label">City</span>
+                <input class="input <%= fieldErrors.ship_city ? 'input--error' : '' %>" type="text" name="ship_city"
+                       value="<%= values.ship_city %>" autocomplete="address-level2" required>
+                <% if (fieldErrors.ship_city) { %><span class="field__error"><%= fieldErrors.ship_city %></span><% } %>
+              </label>
+
+              <label class="field">
+                <span class="field__label">Postcode</span>
+                <input class="input <%= fieldErrors.ship_postcode ? 'input--error' : '' %>" type="text" name="ship_postcode"
+                       value="<%= values.ship_postcode %>" autocomplete="postal-code" required>
+                <% if (fieldErrors.ship_postcode) { %><span class="field__error"><%= fieldErrors.ship_postcode %></span><% } %>
+              </label>
+            </div>
+
+            <label class="field">
+              <span class="field__label">Phone <span class="field__optional">Optional</span></span>
+              <input class="input <%= fieldErrors.ship_phone ? 'input--error' : '' %>" type="tel" name="ship_phone"
+                     value="<%= values.ship_phone %>" autocomplete="tel"
+                     placeholder="For delivery appointments">
+              <% if (fieldErrors.ship_phone) { %><span class="field__error"><%= fieldErrors.ship_phone %></span><% } %>
+            </label>
+          </fieldset>
+
+          <fieldset class="fieldset reveal" data-delay="1">
+            <legend class="fieldset__legend">Delivery method</legend>
+
+            <label class="choice <%= values.ship_method === 'standard' ? 'is-selected' : '' %>">
+              <input type="radio" name="ship_method" value="standard" <%= values.ship_method === 'standard' ? 'checked' : '' %>>
+              <span class="choice__mark" aria-hidden="true"></span>
+              <span class="choice__body">
+                <span class="choice__title">Standard delivery</span>
+                <span class="choice__meta">Arrives in 3 to 5 working days</span>
+              </span>
+              <span class="choice__price"><%= standardCost === 0 ? 'Complimentary' : '$' + catalog.formatPrice(standardCost) %></span>
+            </label>
+
+            <label class="choice <%= values.ship_method === 'express' ? 'is-selected' : '' %>">
+              <input type="radio" name="ship_method" value="express" <%= values.ship_method === 'express' ? 'checked' : '' %>>
+              <span class="choice__mark" aria-hidden="true"></span>
+              <span class="choice__body">
+                <span class="choice__title">Express delivery</span>
+                <span class="choice__meta">Next working day if ordered before 2pm</span>
+              </span>
+              <span class="choice__price">$<%= catalog.formatPrice(expressCost) %></span>
+            </label>
+
+            <% if (standardCost === 0) { %>
+              <p class="tiny muted" style="margin-top:1rem">
+                Standard delivery is complimentary on this order.
+              </p>
+            <% } else { %>
+              <p class="tiny muted" style="margin-top:1rem">
+                Add $<%= catalog.formatPrice(freeThreshold - totalPrice) %> to your order for complimentary standard delivery.
+              </p>
+            <% } %>
+          </fieldset>
+
+          <div class="checkout-actions reveal" data-delay="2">
+            <button class="btn btn--primary btn--lg" type="submit">Place Order</button>
+            <a class="link-underline" href="/display-cart">Back to cart</a>
+          </div>
+
+          <p class="tiny muted" style="margin-top:1.5rem">
+            This is a demonstration storefront. No payment is taken and nothing is dispatched.
+          </p>
+        </form>
+
+        <aside class="summary reveal" data-delay="1">
+          <h3>Your order</h3>
+
+          <% cartItems.forEach(function (item) { %>
+            <div class="summary-line">
+              <span class="summary-line__media"><%- catalog.productArt(item, { ratio: 'portrait' }) %></span>
+              <span class="summary-line__body">
+                <span class="summary-line__name"><%= item.title %></span>
+                <span class="summary-line__meta">Qty <%= item.quantity %></span>
+              </span>
+              <span class="summary-line__price">$<%= catalog.formatPrice(item.totalPrice) %></span>
+            </div>
+          <% }) %>
+
+          <div class="summary__row" style="margin-top:1.25rem">
+            <span>Subtotal</span>
+            <span>$<%= catalog.formatPrice(totalPrice) %></span>
+          </div>
+          <div class="summary__row">
+            <span>Delivery</span>
+            <span><%= shipping === 0 ? 'Complimentary' : '$' + catalog.formatPrice(shipping) %></span>
+          </div>
+          <div class="summary__row summary__row--total">
+            <span>Total</span>
+            <strong>$<%= catalog.formatPrice(grandTotal) %></strong>
+          </div>
+
+          <div class="assurances" style="margin:1.5rem 0 0;border-bottom:0;padding-bottom:0">
+            <p class="assurance">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 2.5l6 2.5v5c0 3.6-2.5 6.6-6 7.5-3.5-.9-6-3.9-6-7.5V5z" stroke-linejoin="round"/><path d="M7.5 10l1.8 1.8L13 8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Secure checkout
+            </p>
+            <p class="assurance">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 10a7 7 0 1 1 2.5 5.4" stroke-linecap="round"/><path d="M3 6v4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              30-day returns
+            </p>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,37 +1,169 @@
-<!--Roll Number : 22B1074-->
+<%
+  var orderTotal = parseFloat(order.total_amount) || 0;
+  var shippingPaid = parseFloat(order.shipping_cost) || 0;
+  var itemsSubtotal = orderTotal - shippingPaid;
+  var placed = new Date(order.order_date);
+  var placedLabel = isNaN(placed) ? String(order.order_date)
+    : placed.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation</title>
+  <%- include('partials/head', { title: 'Order Confirmed' }) %>
 </head>
 <body>
-    <h1>Order Confirmation</h1>
-    <p>Order ID: <%= order.order_id %></p>
-    <p>Order Date: <%= order.order_date %></p>
-    <p><strong>Total Amount: $<%= parseFloat(order.total_amount).toFixed(2) %></strong></p>
-    
-    <h2>Order Items:</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% orderItems.forEach(item => { %>
-                <tr>
-                    <td><%= item.name %></td>
-                    <td><%= item.quantity %></td>
-                    <td>$<%= typeof item.price === 'number' ? item.price.toFixed(2) : parseFloat(item.price).toFixed(2) %></td>
-                </tr>
-            <% }) %>
-        </tbody>
-    </table>
+  <%- include('partials/header') %>
 
-    <a href="/dashboard">Back to Dashboard</a>
+  <main id="main">
+    <section class="section section--cream" style="text-align:center">
+      <div class="wrap-slim">
+        <div class="notice__icon reveal">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M5 12.5l4.5 4.5L19 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="eyebrow reveal">Order No. <%= String(order.order_id).padStart(6, '0') %></span>
+        <h1 class="h1 reveal" data-delay="1" style="margin-bottom:1.25rem">Thank you</h1>
+        <p class="lede reveal" data-delay="2" style="margin-inline:auto">
+          Your order is confirmed and will be dispatched within two working days.
+          A receipt is on its way to your inbox.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="wrap" style="max-width:900px">
+
+        <div class="reveal" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;padding-bottom:2.5rem;border-bottom:1px solid var(--line)">
+          <div>
+            <p class="field__label" style="margin-bottom:0.35rem">Order number</p>
+            <p style="margin:0">No. <%= String(order.order_id).padStart(6, '0') %></p>
+          </div>
+          <div>
+            <p class="field__label" style="margin-bottom:0.35rem">Placed</p>
+            <p style="margin:0"><%= placedLabel %></p>
+          </div>
+          <div>
+            <p class="field__label" style="margin-bottom:0.35rem">Items</p>
+            <p style="margin:0"><%= orderItems.length %> <%= orderItems.length === 1 ? 'piece' : 'pieces' %></p>
+          </div>
+          <div>
+            <p class="field__label" style="margin-bottom:0.35rem">Total</p>
+            <p style="margin:0">$<%= catalog.formatPrice(orderTotal) %></p>
+          </div>
+        </div>
+
+        <% if (order.ship_name) { %>
+          <div class="reveal" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-top:2.5rem">
+            <div>
+              <p class="field__label" style="margin-bottom:0.75rem">Delivering to</p>
+              <div class="ship-card">
+                <address>
+                  <strong><%= order.ship_name %></strong><br>
+                  <%= order.ship_line1 %><br>
+                  <% if (order.ship_line2) { %><%= order.ship_line2 %><br><% } %>
+                  <%= order.ship_city %>, <%= order.ship_postcode %>
+                  <% if (order.ship_phone) { %><br><%= order.ship_phone %><% } %>
+                </address>
+              </div>
+            </div>
+            <div>
+              <p class="field__label" style="margin-bottom:0.75rem">Delivery method</p>
+              <div class="ship-card">
+                <strong><%= order.ship_method === 'express' ? 'Express delivery' : 'Standard delivery' %></strong><br>
+                <span class="muted">
+                  <%= order.ship_method === 'express' ? 'Next working day if ordered before 2pm' : 'Arrives in 3 to 5 working days' %><br>
+                  <%= Number(order.shipping_cost) === 0 ? 'Complimentary' : '$' + catalog.formatPrice(order.shipping_cost) %>
+                </span>
+              </div>
+            </div>
+          </div>
+        <% } %>
+
+        <h2 class="h3 reveal" style="margin:2.5rem 0 1.5rem">What you ordered</h2>
+
+        <div class="reveal" style="overflow-x:auto">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Piece</th>
+                <th scope="col">Reference</th>
+                <th scope="col" class="num">Qty</th>
+                <th scope="col" class="num">Price</th>
+                <th scope="col" class="num">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orderItems.forEach(function (item) { %>
+                <tr>
+                  <td>
+                    <a href="<%= item.href %>" style="font-family:var(--serif);font-size:1.0625rem"><%= item.title %></a>
+                    <div class="tiny muted"><%= item.category %></div>
+                  </td>
+                  <td class="muted small">No. <%= String(item.product_id).padStart(4, '0') %></td>
+                  <td class="num"><%= item.quantity %></td>
+                  <td class="num">$<%= item.priceLabel %></td>
+                  <td class="num">$<%= catalog.formatPrice(item.price * item.quantity) %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4" class="num small muted" style="padding-bottom:0.25rem">Subtotal</td>
+                <td class="num small muted" style="padding-bottom:0.25rem">$<%= catalog.formatPrice(itemsSubtotal) %></td>
+              </tr>
+              <tr>
+                <td colspan="4" class="num small muted" style="padding-top:0">Delivery</td>
+                <td class="num small muted" style="padding-top:0">
+                  <%= shippingPaid === 0 ? 'Complimentary' : '$' + catalog.formatPrice(shippingPaid) %>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4" class="num" style="font-size:0.875rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3)">Order total</td>
+                <td class="num" style="font-family:var(--serif);font-size:1.375rem">$<%= catalog.formatPrice(orderTotal) %></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="assurances reveal" style="margin-top:2.5rem">
+          <p class="assurance">
+            <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 7h11v7H2z"/><path d="M13 9h3l2 2.5V14h-5z"/><circle cx="5.5" cy="15" r="1.6"/><circle cx="14.5" cy="15" r="1.6"/></svg>
+            Dispatched within two working days. Tracking to follow
+          </p>
+          <p class="assurance">
+            <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 10a7 7 0 1 1 2.5 5.4" stroke-linecap="round"/><path d="M3 6v4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            30 days to change your mind
+          </p>
+        </div>
+
+        <div class="notice__actions reveal" style="justify-content:flex-start;margin-top:2.5rem">
+          <a class="btn btn--primary" href="/shop">Continue Shopping</a>
+          <a class="btn btn--ghost" href="/dashboard">Back to Account</a>
+        </div>
+      </div>
+    </section>
+
+    <% if (suggestions && suggestions.length) { %>
+      <section class="section section--cream">
+        <div class="wrap-wide">
+          <div class="section-head reveal">
+            <div class="section-head__text">
+              <span class="eyebrow">Chosen for you</span>
+              <h2 class="h2">Complete the set</h2>
+            </div>
+            <a class="link-underline" href="/shop">Shop all</a>
+          </div>
+          <div class="product-grid product-grid--4">
+            <% suggestions.forEach(function (product, i) { %>
+              <%- include('partials/product-card', { product: product, delay: Math.min(i + 1, 4) }) %>
+            <% }) %>
+          </div>
+        </div>
+      </section>
+    <% } %>
+  </main>
+
+  <%- include('partials/footer') %>
 </body>
 </html>
